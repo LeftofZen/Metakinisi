@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Graph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
@@ -17,10 +18,16 @@ namespace Metakinisi
 
 		// define movement
 		float speed = 1.13f;
-		bool reversed = false;
+		public bool reversed = false;
 
 		//public float direction = RotationHelpers.RotationAngles[Rotation.Zero]; // in radians
 		//public Rotation Direction = Rotation.Zero;
+
+		// new graph code
+		Node Destination;
+		Edge Location;
+		float edgePosition;
+		//Vector2 position;
 
 		public Vehicle(Point cell, float percent)
 		{
@@ -31,6 +38,11 @@ namespace Metakinisi
 		{
 			Cell = cell;
 			PercentThroughTile = percent;
+		}
+
+		public void PlaceOnEdge(Edge e, float percent)
+		{
+
 		}
 
 		public void Reverse()

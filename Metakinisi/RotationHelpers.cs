@@ -12,6 +12,14 @@ namespace Metakinisi
 			{ Rotation.TwoSeventy, Rotation.Zero },
 		};
 
+		public static readonly Dictionary<Rotation, Rotation> PreviousRotation = new()
+		{
+			{ Rotation.Ninety, Rotation.Zero },
+			{ Rotation.OneEighty, Rotation.Ninety },
+			{ Rotation.TwoSeventy, Rotation.OneEighty },
+			{ Rotation.Zero, Rotation.TwoSeventy },
+		};
+
 		// '0' degrees is to the 'right', or +ve x-axis as in 2pi on cartesian plane
 		public static readonly Dictionary<Rotation, float> RotationAngles = new()
 		{
