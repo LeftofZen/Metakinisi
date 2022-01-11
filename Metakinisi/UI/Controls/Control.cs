@@ -5,7 +5,6 @@ using MonoGame.Extended;
 
 namespace Metakinisi.UI
 {
-
 	public abstract class Control : IDrawable, IUpdateable
 	{
 		public Control(Rectangle bounds)
@@ -20,6 +19,9 @@ namespace Metakinisi.UI
 		public Action OnDragBegin;
 		public Action OnDragEnd;
 
+		public bool ShouldDisposeOnClose = false;
+		public bool ShouldDispose = false;
+
 		public bool IsHovering = false;
 		public bool IsDragging => DragBeginPoint != Point.Zero;
 		public bool IsPressed = false;
@@ -32,13 +34,18 @@ namespace Metakinisi.UI
 		public Color ForeColor { get; set; } = Color.DarkMagenta;
 		public Color BackColor { get; set; } = Color.Magenta;
 
+		public TilesetReference? BackgroundImage { get; set; } = null;
+
 		public Rectangle RelativeBounds;
 		public Rectangle AbsoluteBounds
 			=> new Rectangle(AbsoluteLocation, RelativeBounds.Size);
 
-		public BorderStyle BorderStyle { get; set; }
+		public BorderStyle BorderStyle;
 
-		private readonly List<Control> controls = new();
+		public int Width => AbsoluteBounds.Width;
+		public int Height => AbsoluteBounds.Height;
+
+		private List<Control> controls = new();
 		public IReadOnlyCollection<Control> Controls => controls.AsReadOnly();
 
 		public Control? Parent;
@@ -89,8 +96,42 @@ namespace Metakinisi.UI
 		{
 			if (DrawBackground)
 			{
-				sb.FillRectangle(AbsoluteBounds, BackColor);
+				if (BackgroundImage == null)
+				{
+					sb.FillRectangle(AbsoluteBounds, BackColor);
+				}
+				else
+				{
+					var centre = new Vector2(BackgroundImage.Value.SourceRectangle.Width / 2f, BackgroundImage.Value.SourceRectangle.Height / 2f);
+					var renderRect = AbsoluteBounds;
+					renderRect.Offset(AbsoluteBounds.Width / 2f, AbsoluteBounds.Height / 2f);
+
+					// image
+					sb.Draw(
+						GameServices.Textures[BackgroundImage.Value.TilesetName],
+						renderRect,
+						BackgroundImage.Value.SourceRectangle,
+						Color.White,
+						RotationHelpers.RotationAnglesForDrawing[BackgroundImage.Value.Rotation],
+						centre,
+						SpriteEffects.None,
+						0f);
+
+					// debug
+					//sb.Draw(
+					//	GameServices.Textures[BackgroundImage.Value.TilesetName],
+					//	new Rectangle(0, 0, GameServices.Textures[BackgroundImage.Value.TilesetName].Width, GameServices.Textures[BackgroundImage.Value.TilesetName].Height),
+					//	Color.White);
+
+					//sb.DrawString(GameServices.Fonts["Calibri"], BackgroundImage.Value.SourceRectangle.ToString(), AbsoluteLocation.ToVector2(), Color.White);
+
+					// debug
+					//sb.DrawRectangle(AbsoluteBounds, Color.Blue, 3);
+					//sb.DrawRectangle(BackgroundImage.Value.SourceRectangle, Color.Aqua, 3);
+					//sb.DrawPoint(BackgroundImage.Value.SourceRectangle.Center.ToVector2(), Color.Yellow, 5);
+				}
 			}
+
 			sb.DrawRectangle(AbsoluteBounds, BorderStyle.Color, BorderStyle.Thickness);
 
 			foreach (var c in controls.Where(c => c.Visible).OrderBy(c => c.ZIndex))
@@ -171,6 +212,9 @@ namespace Metakinisi.UI
 			{
 				c.Update(gameTime);
 			}
+
+			// remove controls we don't need
+			controls = controls.Where(c => !c.ShouldDispose).ToList();
 		}
 	}
 }

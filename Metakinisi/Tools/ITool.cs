@@ -5,6 +5,6 @@ namespace Metakinisi.Tools
 {
 	public interface ITool : IDrawable
 	{
-		void Update(GameTime gameTime, TrackElement[,] track, Graph2D railGraph);
+		void Update(GameTime gameTime, Graph2D railGraph);
 	}
 }

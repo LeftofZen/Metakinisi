@@ -13,8 +13,21 @@ namespace Metakinisi.UI
 		Color PressedForeColor = Color.Black;
 
 		Label lblText;
+
+		public string Text
+		{
+			get => lblText.Text;
+			set => lblText.Text = value;
+		}
+
 		//public bool IsToggle = false;
 		//public bool ToggleValue = false;
+
+		public bool DrawText
+		{
+			get => lblText.Visible;
+			set => lblText.Visible = value;
+		}
 
 		public Button(Rectangle bounds, string text, Action action) : base(bounds)
 		{

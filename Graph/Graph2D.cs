@@ -10,7 +10,7 @@ namespace Graph
 	{
 		public readonly HashSet<Node> Nodes = new();
 		public readonly HashSet<Edge> Edges = new();
-		public GraphDrawMode DrawMode { get; set; } = GraphDrawMode.Normal;
+		public GraphDrawMode DrawMode { get; set; } = GraphDrawMode.Debug;
 
 		public void Clear()
 		{

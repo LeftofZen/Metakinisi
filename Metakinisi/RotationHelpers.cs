@@ -29,6 +29,14 @@ namespace Metakinisi
 			{ Rotation.TwoSeventy, (float)(2.0 * Math.PI / 2.0) },
 		};
 
+		public static readonly Dictionary<Rotation, float> RotationAnglesForDrawing = new()
+		{
+			{ Rotation.Zero, (float)(0.0 * Math.PI / 2.0) },
+			{ Rotation.Ninety, (float)(3.0 * Math.PI / 2.0) },
+			{ Rotation.OneEighty, (float)(2.0 * Math.PI / 2.0) },
+			{ Rotation.TwoSeventy, (float)(1.0 * Math.PI / 2.0) },
+		};
+
 		public static readonly Dictionary<Rotation, Vector2> RotationVectors = new()
 		{
 			{ Rotation.Zero, new Vector2(1, 0) },

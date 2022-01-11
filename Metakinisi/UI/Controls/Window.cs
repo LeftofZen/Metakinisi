@@ -6,7 +6,7 @@ namespace Metakinisi.UI
 	{
 		public string Title { get; set; }
 
-		Panel titleBar;
+		protected Panel titleBar;
 		int titleBarThickness = 24;
 
 		public Window(Rectangle bounds, string title) : base(bounds)
@@ -44,6 +44,7 @@ namespace Metakinisi.UI
 		{
 			Visible = false;
 			Enabled = false;
+			ShouldDispose = ShouldDisposeOnClose;
 		}
 
 		public void DragControl()

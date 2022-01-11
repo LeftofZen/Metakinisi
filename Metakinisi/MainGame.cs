@@ -102,6 +102,7 @@ namespace Metakinisi
 
 			GameServices.Fonts.Add("Calibri", Content.Load<SpriteFont>("Calibri"));
 			GameServices.Textures.Add("tileset", Content.Load<Texture2D>("Textures\\tileset1"));
+			GameServices.Textures.Add("ui", Content.Load<Texture2D>("Textures\\ui"));
 			//GameServices.Textures.Add("ui", Content.Load<Texture2D>("tiles/18x18_ui"));
 
 			//var path = Content.Load<ItemDefinition[]>("config/items");
@@ -155,8 +156,6 @@ namespace Metakinisi
 
 			base.Update(gameTime);
 		}
-
-
 
 		protected override void Draw(GameTime gameTime)
 		{

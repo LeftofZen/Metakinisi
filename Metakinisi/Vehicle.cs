@@ -9,11 +9,13 @@ namespace Metakinisi
 	{
 		public Vector2 Position
 		{
-			get => TrackWorld[Cell.Y, Cell.X].PositionFromLerpedPercent(PercentThroughTile);
+			get => TrackWorld[Cell.Y, Cell.X]
+				.First(e => e.Coordinates.Z == Cell.Z)
+				.PositionFromLerpedPercent(PercentThroughTile);
 		}
 
 		// define world location
-		Point Cell;
+		Point3 Cell;
 		public float PercentThroughTile = 0f;
 
 		// define movement
@@ -29,12 +31,12 @@ namespace Metakinisi
 		float edgePosition;
 		//Vector2 position;
 
-		public Vehicle(Point cell, float percent)
+		public Vehicle(Point3 cell, float percent)
 		{
 			PlaceInCell(cell, percent);
 		}
 
-		public void PlaceInCell(Point cell, float percent)
+		public void PlaceInCell(Point3 cell, float percent)
 		{
 			Cell = cell;
 			PercentThroughTile = percent;
@@ -50,7 +52,7 @@ namespace Metakinisi
 			reversed = !reversed;
 		}
 
-		public void Update(GameTime gameTime, TrackElement[,] trackWorld)
+		public void Update(GameTime gameTime, List<TrackElement>[,] trackWorld)
 		{
 			TrackWorld = trackWorld;
 			var track = GetCurrentTrackElement(Cell, trackWorld);
@@ -80,24 +82,24 @@ namespace Metakinisi
 						break;
 					}
 
-					var nextCoords = track.GetConnectedTrackElement(track.Paths.First().Value.First(), reversed);
-					track = GetCurrentTrackElement(nextCoords, trackWorld);
+					//var nextCoords = track.GetConnectedTrackElement(track.Paths.First().Value.First(), reversed);
+					//track = GetCurrentTrackElement(nextCoords, trackWorld);
 
-					if (track.type != TrackType.None)
-					{
-						Cell = nextCoords;
-						PercentThroughTile = (reversed ? 1f : 0f);
-					}
+					//if (track.type != TrackType.None)
+					//{
+					//	Cell = nextCoords;
+					//	PercentThroughTile = (reversed ? 1f : 0f);
+					//}
 				}
 			}
 			while (remainingSpeedToUse > 0);
 		}
 
-		TrackElement[,] TrackWorld;
+		List<TrackElement>[,] TrackWorld;
 
-		static TrackElement GetCurrentTrackElement(Point coords, TrackElement[,] trackWorld)
+		static TrackElement GetCurrentTrackElement(Point3 coords, List<TrackElement>[,] trackWorld)
 			=> coords.Y >= 0 && coords.X >= 0 && coords.Y < trackWorld.GetLength(0) && coords.X < trackWorld.GetLength(1)
-		? trackWorld[coords.Y, coords.X]
+		? trackWorld[coords.Y, coords.X].First()
 		: TrackElement.None;
 
 		static Point GetCurrentCoordinates(Vector2 position)

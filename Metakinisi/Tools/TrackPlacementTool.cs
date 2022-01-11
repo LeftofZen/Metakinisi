@@ -15,21 +15,16 @@ namespace Metakinisi.Tools
 		public Edge? highlightedEdge;
 		public Edge? ghostEdge;
 
-		public void AddTrack(Point cellCoords, Rotation rotation, TrackType trackType)
-		{
-
-			//railGraph.AddEdge(ghostEdge.Value);
-		}
-
-		public void Update(GameTime gameTime, TrackElement[,] track, Graph2D railGraph)
+		public void Update(GameTime gameTime, Graph2D railGraph)
 		{
 			var input = GameServices.InputManager;
+			var map = GameServices.GridWorld.Map;
 
 			var cell = new Point(input.CurrentMouse.X / GameServices.GridSize, input.CurrentMouse.Y / GameServices.GridSize);
 
 			highlightedEdge = null;
 			// get highlighted rail cell
-			if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
+			if (cell.Y >= 0 && cell.Y < map.Height && cell.X >= 0 && cell.X < map.Width)
 			{
 				var rect = new RectangleF(cell.X * GameServices.GridSize, cell.Y * GameServices.GridSize, GameServices.GridSize, GameServices.GridSize);
 				foreach (var e in railGraph.Edges)
@@ -50,7 +45,7 @@ namespace Metakinisi.Tools
 			// place
 
 			// new graph track placement
-			if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
+			if (cell.Y >= 0 && cell.Y < map.Height && cell.X >= 0 && cell.X < map.Width)
 			{
 				var cellCoords = new Point(cell.X * GameServices.GridSize, cell.Y * GameServices.GridSize);
 
@@ -106,7 +101,10 @@ namespace Metakinisi.Tools
 				if (input.IsMouseButtonPressed(MouseButtons.LeftButton) && ghostEdge != null)
 				{
 					railGraph.AddEdge(ghostEdge.Value);
-					//AddTrack();
+
+					var surfaceElement = map.GetSurfaceElement(cell.X, cell.Y);
+					var trackElement = new TrackElement(new Point3(cell.X, cell.Y, surfaceElement.Coordinates.Z), cursorType, cursorRotation);
+					map.AddElement(trackElement);
 				}
 			}
 
