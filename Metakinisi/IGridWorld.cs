@@ -6,9 +6,7 @@ namespace Metakinisi
 {
 	public interface IGridWorld : IUpdateable, IDrawable
 	{
-		Map Map { get; }
-
-		Graph2D RailGraph { get; }
+		GameState GameState { get; }
 
 		RenderTarget2D RenderTarget { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Metakinisi.UI
 {
@@ -17,6 +18,7 @@ namespace Metakinisi.UI
 			titleBar = new Panel(new Rectangle(0, 0, RelativeBounds.Width, titleBarThickness))
 			{
 				BackColor = Color.Red,
+				Name = "TitleBar",
 			};
 
 			// rough approx. of 10 pixels per char, can use MeasureString later
@@ -26,6 +28,7 @@ namespace Metakinisi.UI
 				Font = GameServices.Fonts["Calibri"],
 				ForeColor = Color.Blue,
 				BackColor = Color.Yellow,
+				Name = "CloseButton",
 			};
 			titleBar.AddControl(lbl);
 
@@ -52,6 +55,22 @@ namespace Metakinisi.UI
 			var mouseTravel = GameServices.InputManager.MouseTravelDistance();
 			RelativeBounds.X += mouseTravel.X;
 			RelativeBounds.Y += mouseTravel.Y;
+			GameServices.UIManager.SetFocusedWindow(this);
+		}
+
+		public override void Draw(SpriteBatch sb)
+		{
+			base.Draw(sb);
+
+			sb.DrawString(GameServices.Fonts["Calibri"], ZIndex.ToString(), AbsoluteLocation.ToVector2(), Color.Black);
+			//debug
+			//  var counter = 0f;
+			//foreach (var c in Controls)
+			//{
+			//	var s = $"Name={c.Name} - ALoc={c.AbsoluteLocation} - RLoc={c.RelativeLocation} Zindex={c.ZIndex}";
+			//	sb.DrawString(GameServices.Fonts["Calibri"], s, new Vector2(AbsoluteLocation.X, AbsoluteLocation.Y + counter), Color.White);
+			//	counter += 20f;
+			//}
 		}
 	}
 }

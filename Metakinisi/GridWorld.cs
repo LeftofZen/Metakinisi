@@ -11,13 +11,14 @@ namespace Metakinisi
 	{
 		public RenderTarget2D RenderTarget { get; set; }
 
-		Map map;
-		Graph2D railGraph;
-
 		#region IGridWorld
 
-		public Map Map => map;
-		public Graph2D RailGraph => railGraph;
+		//public Map Map => gameState.Map;
+		//public Graph2D RailGraph => gameState.RailGraph;
+
+		GameState gameState;
+
+		public GameState GameState => gameState;
 
 		#endregion
 
@@ -34,8 +35,8 @@ namespace Metakinisi
 			Width = width;
 			Height = height;
 
-			map = new Map(Width, Height);
-			railGraph = new Graph2D();
+			gameState = new GameState();
+			gameState.Map = new Map(Width, Height);
 
 			//train = new Vehicle(new Point(4, 4), 0.5f);
 		}
@@ -52,7 +53,7 @@ namespace Metakinisi
 
 			if (CurrentTool != null)
 			{
-				CurrentTool.Update(gameTime, railGraph);
+				CurrentTool.Update(gameTime, gameState.RailGraph);
 			}
 
 			if (input.IsNewMousePress(MouseButtons.RightButton))
@@ -97,7 +98,7 @@ namespace Metakinisi
 
 		void DrawReal(SpriteBatch sb)
 		{
-			Map.Draw(sb);
+			gameState.Map.Draw(sb);
 
 			//train.Draw(sb);
 
@@ -111,7 +112,7 @@ namespace Metakinisi
 			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(11, 71), Color.Black);
 			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(10, 70), Color.White);
 
-			railGraph.Draw(sb);
+			gameState.RailGraph.Draw(sb);
 		}
 	}
 }

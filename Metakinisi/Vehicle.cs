@@ -18,6 +18,8 @@ namespace Metakinisi
 		Point3 Cell;
 		public float PercentThroughTile = 0f;
 
+		public string Name { get; set; }
+
 		// define movement
 		float speed = 1.13f;
 		public bool reversed = false;
@@ -31,9 +33,10 @@ namespace Metakinisi
 		float edgePosition;
 		//Vector2 position;
 
-		public Vehicle(Point3 cell, float percent)
+		public Vehicle(Point3 cell, float percent, string name)
 		{
 			PlaceInCell(cell, percent);
+			Name = name;
 		}
 
 		public void PlaceInCell(Point3 cell, float percent)
@@ -104,6 +107,11 @@ namespace Metakinisi
 
 		static Point GetCurrentCoordinates(Vector2 position)
 			=> new((int)position.X / 32, (int)position.Y / 32);
+
+		public override string ToString()
+		{
+			return $"{Name} @ {Cell}";
+		}
 
 		public void Draw(SpriteBatch sb)
 		{

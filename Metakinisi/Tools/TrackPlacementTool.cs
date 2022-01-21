@@ -18,7 +18,7 @@ namespace Metakinisi.Tools
 		public void Update(GameTime gameTime, Graph2D railGraph)
 		{
 			var input = GameServices.InputManager;
-			var map = GameServices.GridWorld.Map;
+			var map = GameServices.GridWorld.GameState.Map;
 
 			var cell = new Point(input.CurrentMouse.X / GameServices.GridSize, input.CurrentMouse.Y / GameServices.GridSize);
 

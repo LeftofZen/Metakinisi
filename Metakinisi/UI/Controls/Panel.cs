@@ -15,10 +15,9 @@ namespace Metakinisi.UI
 		public override void Draw(SpriteBatch sb)
 		{
 			base.Draw(sb);
-
 			if (renderTarget != null)
 			{
-				sb.Draw(renderTarget, RelativeBounds, Color.White);
+				sb.Draw(renderTarget, AbsoluteBounds, Color.White);
 			}
 		}
 	}

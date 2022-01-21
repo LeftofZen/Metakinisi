@@ -31,6 +31,8 @@ namespace Metakinisi.UI
 
 		public bool DrawBackground { get; set; } = true;
 
+		public string Name { get; set; } = "<unnamed>";
+
 		public Color ForeColor { get; set; } = Color.DarkMagenta;
 		public Color BackColor { get; set; } = Color.Magenta;
 

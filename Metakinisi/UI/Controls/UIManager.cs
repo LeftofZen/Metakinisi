@@ -6,32 +6,57 @@ namespace Metakinisi.UI
 {
 	public class UIManager : IDrawable, IUpdateable
 	{
-		public Control TopLevelControl;
-		public Control? FocusedControl;
+		public List<Window> Windows = new(); // ordered by zorder
+		public Control? FocusedWindow;
 
 		public bool HighlightFocusedControl = true;
 
-		IEnumerable<Control> AllControls => GetControls(TopLevelControl);
+		public int MaxZIndex = int.MaxValue;
 
-		static IEnumerable<Control> GetControls(Control parent)
+		public UIManager()
 		{
-			foreach (var c in parent.Controls)
-			{
-				yield return c;
-				GetControls(c);
-			}
+
 		}
+
+		//IEnumerable<Control> GetControls() => GetControls(Windows);
+		//IEnumerable<Control> GetAllControls() => GetControls(Windows);
+
+		//IEnumerable<Control> GetAllControls()
+		//{
+		//	foreach (var v in Windows)
+		//	{
+		//		foreach (Control c in v.Controls)
+		//		{
+		//			yield return c;
+		//			GetControls(c);
+		//		}
+		//	}
+		//}
+
+		//static IEnumerable<Control> GetControls(Control parent)
+		//{
+		//	foreach (var c in parent.Controls)
+		//	{
+		//		yield return c;
+		//		GetControls(c);
+		//	}
+		//}
 
 		public void Draw(SpriteBatch sb)
 		{
-			TopLevelControl.Draw(sb);
+			foreach (var window in Windows.Where(w => w.Visible).OrderBy(w => w.ZIndex))
+			{
+				window.Draw(sb);
+			}
 
 			if (HighlightFocusedControl)
 			{
-				var fc = FocusedControl;
+				var fc = FocusedWindow;
 				if (fc != null)
 				{
-					sb.DrawRectangle(fc.AbsoluteBounds, Color.Red, 5);
+					var rect = fc.AbsoluteBounds;
+					rect.Inflate(3, 3);
+					sb.DrawRectangle(rect, Color.DarkRed, 5);
 				}
 			}
 		}
@@ -41,35 +66,75 @@ namespace Metakinisi.UI
 			var window = new Window(new Rectangle(400, 400, 400, 200), $"Error: {message}");
 			window.ShouldDisposeOnClose = true;
 			window.ZIndex = 100;
-			FocusedControl = window;
-			TopLevelControl.AddControl(window);
+			FocusedWindow = window;
+
+			//TopLevelControl.AddControl(window);
 		}
 
 		public void Update(GameTime gameTime)
 		{
-			if (FocusedControl == null)
+			foreach (var w in Windows)
 			{
-				SetFocusedControl();
+				w.Update(gameTime);
+			}
+
+			if (FocusedWindow == null)
+			{
+				SetFocusedWindow();
 			}
 
 			// FocusedControl can still be null if you drag off the edge
 			// of the entire game window 
-			if (FocusedControl != null && !FocusedControl.IsDragging)
+			if (FocusedWindow != null && !FocusedWindow.IsDragging)
 			{
-				SetFocusedControl();
+				SetFocusedWindow();
 			}
 
-			FocusedControl?.HandleInput(gameTime);
-			TopLevelControl.Update(gameTime);
+			FocusedWindow?.HandleInput(gameTime);
 		}
 
-		private void SetFocusedControl()
+		public void SetFocusedWindow(Window w = null)
 		{
-			FocusedControl = AllControls
-				//.OfType<Window>()
+			if (w is null)
+			{
+				w = Windows
 				.Where(c => c.AbsoluteBounds.Contains(GameServices.InputManager.CurrentMouse.Position))
 				.OrderByDescending(c => c.ZIndex)
 				.FirstOrDefault();
+
+				if (w is not null)
+				{
+					foreach (var ww in Windows.Where(ww => ww.Title != "Main Game"))
+					{
+						ww.ZIndex = 10;
+					}
+					Windows.Where(ww => ww.Title == "Main Game").Single().ZIndex = 0;
+
+					w.ZIndex = 20;
+					FocusedWindow = w;
+				}
+				return;
+			}
+			else
+			{
+				FocusedWindow.ZIndex = 10;
+				FocusedWindow = w;
+				FocusedWindow.ZIndex = 20;
+				//var oldWindow = FocusedWindow;
+				//var FocusedZIndex = FocusedWindow.ZIndex;
+				//FocusedWindow = w;
+
+				//oldWindow.ZIndex = w.ZIndex;
+				//w.ZIndex = FocusedZIndex;
+
+
+				//var currZIndex = FocusedWindow.ZIndex;
+				//foreach (var ww in Windows.Where(ww => ww.Title != "Main Game"))
+				//{
+				//	ww.ZIndex = 10;
+				//}
+				//FocusedWindow.ZIndex = MaxZIndex;
+			}
 		}
 	}
 }
