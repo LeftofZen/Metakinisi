@@ -1,85 +1,71 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Graph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
+using Metakinisi.Input;
+using Metakinisi.Tools;
 
 namespace Metakinisi
 {
-	public class GridWorld
+	public class GridWorld : IGridWorld
 	{
-		MouseState previousMouseState;
-		KeyboardState previousKeyboardState;
+		public RenderTarget2D RenderTarget { get; set; }
 
-		GridCell[,] world;
-		TrackElement[,] track;
+		#region IGridWorld
+
+		//public Map Map => gameState.Map;
+		//public Graph2D RailGraph => gameState.RailGraph;
+
+		GameState gameState;
+
+		public GameState GameState => gameState;
+
+		#endregion
 
 		CellType selectedCellType = CellType.Dirt;
 		MouseClickMode selectedMouseClickMode = MouseClickMode.None;
-		const int gridSize = 32;
-		const int worldSize = 16;
-		Rotation cursorRotation;
-		TrackType cursorType = TrackType.Straight;
+		public ITool CurrentTool;
 		Vehicle train;
 
-		public GridWorld()
+		public int Height { get; init; }
+		public int Width { get; init; }
+
+		public GridWorld(int width, int height)
 		{
-			world = new GridCell[worldSize, worldSize];
-			track = new TrackElement[worldSize, worldSize];
+			Width = width;
+			Height = height;
 
-			for (int y = 0; y < worldSize; ++y)
-			{
-				for (int x = 0; x < worldSize; ++x)
-				{
-					world[y, x] = new GridCell(CellType.Grass);
-				}
-			}
+			gameState = new GameState();
+			gameState.Map = new Map(Width, Height);
 
-			for (int y = 0; y < worldSize; ++y)
-			{
-				for (int x = 0; x < worldSize; ++x)
-				{
-					track[y, x] = new TrackElement(new Point(x, y), TrackType.None);
-				}
-			}
+			//train = new Vehicle(new Point(4, 4), 0.5f);
+		}
 
-			//track[3, 4] = new TrackElement { type = TrackType.Straight, rotation = Rotation.Zero };
-			//track[0, 0] = new TrackElement { type = TrackType.Straight, rotation = Rotation.Ninety };
-
-			train = new Vehicle(new Point(4, 4), 0.5f);
+		public void SetCurrentTool(ITool tool)
+		{
+			CurrentTool = tool;
 		}
 
 		public void Update(GameTime gameTime)
 		{
-			var currMouseState = Mouse.GetState();
-			var currKeyboardState = Keyboard.GetState();
+			var input = GameServices.InputManager;
+			input.Update(gameTime);
 
-			// update
-			if (currMouseState.LeftButton == ButtonState.Pressed)
+			if (CurrentTool != null)
 			{
-				var cell = new Point(currMouseState.X / gridSize, currMouseState.Y / gridSize);
-				if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
+				CurrentTool.Update(gameTime, gameState.RailGraph);
+			}
+
+			if (input.IsNewMousePress(MouseButtons.RightButton))
+			{
+				var cell = new Point(input.CurrentMouse.X / GameServices.GridSize, input.CurrentMouse.Y / GameServices.GridSize);
+				//if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
 				{
-					track[cell.Y, cell.X] = new TrackElement(cell, cursorType, cursorRotation);
-				}
-			}
-
-			if (currKeyboardState.IsKeyDown(Keys.R) && !previousKeyboardState.IsKeyDown(Keys.R))
-			{
-				cursorRotation = RotationHelpers.NextRotation[cursorRotation];
-			}
-
-			if (currKeyboardState.IsKeyDown(Keys.T) && !previousKeyboardState.IsKeyDown(Keys.T))
-			{
-				cursorType = cursorType == TrackType.Straight ? TrackType.Curve : TrackType.Straight;
-			}
-
-			if (currMouseState.RightButton == ButtonState.Pressed && previousMouseState.RightButton != ButtonState.Pressed)
-			{
-				// snap to track
-				var cell = new Point(currMouseState.X / gridSize, currMouseState.Y / gridSize);
-				if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
-				{
-					train.PlaceInCell(cell, 0.5f); //position = track[cell.Y, cell.X].PositionFromLerpedPercent(0.5f);
+					// snap to track
+					//if (cell.Y >= 0 && cell.Y < track.GetLength(1) && cell.X >= 0 && cell.X < track.GetLength(1))
+					{
+						//train.PlaceInCell(cell, 0.5f); //position = track[cell.Y, cell.X].PositionFromLerpedPercent(0.5f);
+					}
 				}
 
 				//var dir = GameServices.Random.Next(0, 3);
@@ -87,55 +73,46 @@ namespace Metakinisi
 				//train.PercentThroughTile = 0.5f;
 			}
 
-			if (currKeyboardState.IsKeyDown(Keys.E) && !previousKeyboardState.IsKeyDown(Keys.E))
+			if (input.IsNewKeyPress(Keys.E))
 			{
 				train.Reverse();
 			}
 
-			train.Update(gameTime, track);
-
-			previousMouseState = currMouseState;
-			previousKeyboardState = currKeyboardState;
+			//train.Update(gameTime, track);
 		}
 
 		public void Draw(SpriteBatch sb)
 		{
-			// world cells
-			for (int y = 0; y < worldSize; ++y)
-			{
-				for (int x = 0; x < worldSize; ++x)
-				{
-					world[y, x].Draw(sb, x, y, gridSize);
-				}
-			}
+			// Set the render target
+			sb.GraphicsDevice.SetRenderTarget(RenderTarget);
 
-			// grid
-			for (int y = 0; y < GameServices.Game.GraphicsDevice.PresentationParameters.BackBufferHeight; y += gridSize)
-			{
-				for (int x = 0; x < GameServices.Game.GraphicsDevice.PresentationParameters.BackBufferWidth; x += gridSize)
-				{
-					sb.DrawRectangle(x, y, gridSize, gridSize, Color.DarkKhaki, 1);
-				}
-			}
+			// Draw the scene
+			sb.GraphicsDevice.Clear(Color.CornflowerBlue);
+			sb.Begin();
+			DrawReal(sb);
+			sb.End();
 
-			// track cells
-			for (int y = 0; y < worldSize; ++y)
-			{
-				for (int x = 0; x < worldSize; ++x)
-				{
-					track[y, x].Draw(sb, x, y, gridSize);
-				}
-			}
+			// Drop the render target
+			sb.GraphicsDevice.SetRenderTarget(null);
+		}
 
-			train.Draw(sb);
+		void DrawReal(SpriteBatch sb)
+		{
+			gameState.Map.Draw(sb);
 
-			// current rotation
-			sb.DrawString(GameServices.Fonts["Calibri"], cursorRotation.ToString() + " (R)", new Vector2(11, 11), Color.Black);
-			sb.DrawString(GameServices.Fonts["Calibri"], cursorRotation.ToString() + " (R)", new Vector2(10, 10), Color.White);
+			//train.Draw(sb);
 
-			// current type
-			sb.DrawString(GameServices.Fonts["Calibri"], cursorType.ToString() + " (T)", new Vector2(11, 31), Color.Black);
-			sb.DrawString(GameServices.Fonts["Calibri"], cursorType.ToString() + " (T)", new Vector2(10, 30), Color.White);
+			CurrentTool?.Draw(sb);
+
+			// reverse train
+			//sb.DrawString(GameServices.Fonts["Calibri"], train.reversed.ToString() + " (E)", new Vector2(11, 51), Color.Black);
+			//sb.DrawString(GameServices.Fonts["Calibri"], train.reversed.ToString() + " (E)", new Vector2(10, 50), Color.White);
+
+			// clear graph
+			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(11, 71), Color.Black);
+			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(10, 70), Color.White);
+
+			gameState.RailGraph.Draw(sb);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Graph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
@@ -8,29 +9,45 @@ namespace Metakinisi
 	{
 		public Vector2 Position
 		{
-			get => TrackWorld[Cell.Y, Cell.X].PositionFromLerpedPercent(PercentThroughTile);
+			get => TrackWorld[Cell.Y, Cell.X]
+				.First(e => e.Coordinates.Z == Cell.Z)
+				.PositionFromLerpedPercent(PercentThroughTile);
 		}
 
 		// define world location
-		Point Cell;
+		Point3 Cell;
 		public float PercentThroughTile = 0f;
+
+		public string Name { get; set; }
 
 		// define movement
 		float speed = 1.13f;
-		bool reversed = false;
+		public bool reversed = false;
 
 		//public float direction = RotationHelpers.RotationAngles[Rotation.Zero]; // in radians
 		//public Rotation Direction = Rotation.Zero;
 
-		public Vehicle(Point cell, float percent)
+		// new graph code
+		Node Destination;
+		Edge Location;
+		float edgePosition;
+		//Vector2 position;
+
+		public Vehicle(Point3 cell, float percent, string name)
 		{
 			PlaceInCell(cell, percent);
+			Name = name;
 		}
 
-		public void PlaceInCell(Point cell, float percent)
+		public void PlaceInCell(Point3 cell, float percent)
 		{
 			Cell = cell;
 			PercentThroughTile = percent;
+		}
+
+		public void PlaceOnEdge(Edge e, float percent)
+		{
+
 		}
 
 		public void Reverse()
@@ -38,7 +55,7 @@ namespace Metakinisi
 			reversed = !reversed;
 		}
 
-		public void Update(GameTime gameTime, TrackElement[,] trackWorld)
+		public void Update(GameTime gameTime, List<TrackElement>[,] trackWorld)
 		{
 			TrackWorld = trackWorld;
 			var track = GetCurrentTrackElement(Cell, trackWorld);
@@ -68,28 +85,33 @@ namespace Metakinisi
 						break;
 					}
 
-					var nextCoords = track.GetConnectedTrackElement(track.Paths.First().Value.First(), reversed);
-					track = GetCurrentTrackElement(nextCoords, trackWorld);
+					//var nextCoords = track.GetConnectedTrackElement(track.Paths.First().Value.First(), reversed);
+					//track = GetCurrentTrackElement(nextCoords, trackWorld);
 
-					if (track.type != TrackType.None)
-					{
-						Cell = nextCoords;
-						PercentThroughTile = (reversed ? 1f : 0f);
-					}
+					//if (track.type != TrackType.None)
+					//{
+					//	Cell = nextCoords;
+					//	PercentThroughTile = (reversed ? 1f : 0f);
+					//}
 				}
 			}
 			while (remainingSpeedToUse > 0);
 		}
 
-		TrackElement[,] TrackWorld;
+		List<TrackElement>[,] TrackWorld;
 
-		static TrackElement GetCurrentTrackElement(Point coords, TrackElement[,] trackWorld)
+		static TrackElement GetCurrentTrackElement(Point3 coords, List<TrackElement>[,] trackWorld)
 			=> coords.Y >= 0 && coords.X >= 0 && coords.Y < trackWorld.GetLength(0) && coords.X < trackWorld.GetLength(1)
-		? trackWorld[coords.Y, coords.X]
+		? trackWorld[coords.Y, coords.X].First()
 		: TrackElement.None;
 
 		static Point GetCurrentCoordinates(Vector2 position)
 			=> new((int)position.X / 32, (int)position.Y / 32);
+
+		public override string ToString()
+		{
+			return $"{Name} @ {Cell}";
+		}
 
 		public void Draw(SpriteBatch sb)
 		{
