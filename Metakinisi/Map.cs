@@ -28,7 +28,7 @@ namespace Metakinisi
 			if (element is SurfaceElement && listForCell.OfType<SurfaceElement>().Any())
 			{
 				//throw new Exception("Cannot add a second surface element to this tile");
-				GameServices.UIManager.ShowPopupMessage("Cannot add a second surface element to this tile");
+				//GameServices.UIManager.ShowPopupMessage("Cannot add a second surface element to this tile");
 				return;
 			}
 			if (element is TrackElement trackElement)
