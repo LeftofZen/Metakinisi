@@ -37,9 +37,7 @@ namespace Endeavour.UI
 	public abstract class Control : Interfaces.IDrawable, Interfaces.IUpdateable
 	{
 		public Control(Rectangle bounds)
-		{
-			RelativeBounds = bounds;
-		}
+			=> RelativeBounds = bounds;
 
 		public event EventHandler MouseDownEH;
 		public event EventHandler MouseUpEH;
@@ -87,7 +85,9 @@ namespace Endeavour.UI
 			var parent = current.Parent;
 
 			if (parent is null)
+			{
 				return null;
+			}
 
 			if (parent is Window window)
 			{
@@ -96,7 +96,7 @@ namespace Endeavour.UI
 			return GetParentWindow(parent);
 		}
 
-		public Image BackgroundImage { get; set; } = null;
+		public IImage BackgroundImage { get; set; } = null;
 
 		public Rectangle RelativeBounds;
 		public Rectangle AbsoluteBounds
@@ -125,7 +125,8 @@ namespace Endeavour.UI
 				}
 			}
 		}
-		int zIndex = 0;
+
+		private int zIndex = 0;
 
 		public bool LockZIndex { get; set; } = false;
 
@@ -159,7 +160,9 @@ namespace Endeavour.UI
 		public Point GetAbsoluteLocation(Control? control)
 		{
 			if (control == null)
+			{
 				return Point.Zero;
+			}
 
 			var parentAbsolute = GetAbsoluteLocation(control.Parent);
 

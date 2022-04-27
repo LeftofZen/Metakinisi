@@ -8,7 +8,7 @@
 
 	public struct FileLogSink : ILogSink
 	{
-		readonly string filename;
+		private readonly string filename;
 
 		public FileLogSink(string filename)
 			=> this.filename = filename;

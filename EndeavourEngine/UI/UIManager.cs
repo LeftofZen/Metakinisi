@@ -66,9 +66,11 @@ namespace Endeavour.UI
 
 		public void ShowPopupMessage(string message)
 		{
-			var window = new Window(new Rectangle(400, 400, 400, 200), $"Error: {message}");
-			window.ShouldDisposeOnClose = true;
-			window.ZIndex = 100;
+			var window = new Window(new Rectangle(400, 400, 400, 200), $"Error: {message}")
+			{
+				ShouldDisposeOnClose = true,
+				ZIndex = 100
+			};
 			FocusedWindow = window;
 
 			//TopLevelControl.AddControl(window);

@@ -1,15 +1,15 @@
-﻿using Metakinisi.Tools;
+﻿using Endeavour.Tileset;
 using Endeavour.UI;
+using Metakinisi.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Endeavour.Tileset;
 
 namespace Metakinisi.UI
 {
 	public class TrackPlacementWindow : Window
 	{
 		public TrackPlacementTool tool = new();
-		Panel currentTrackImage;
+		private Panel currentTrackImage;
 
 		public TrackPlacementWindow(Rectangle bounds, string text) : base(bounds, text)
 		{
@@ -63,8 +63,10 @@ namespace Metakinisi.UI
 			};
 			AddControl(rotateRight);
 
-			currentTrackImage = new Panel(new Rectangle(16, squareButton.Y + squareButton.Height + 16, 32, 32));
-			currentTrackImage.BorderStyle = new BorderStyle { Color = Color.Black, Thickness = 2 };
+			currentTrackImage = new Panel(new Rectangle(16, squareButton.Y + squareButton.Height + 16, 32, 32))
+			{
+				BorderStyle = new BorderStyle { Color = Color.Black, Thickness = 2 }
+			};
 			AddControl(currentTrackImage);
 		}
 
@@ -99,9 +101,6 @@ namespace Metakinisi.UI
 			}
 		}
 
-		public override void Draw(SpriteBatch sb)
-		{
-			base.Draw(sb);
-		}
+		public override void Draw(SpriteBatch sb) => base.Draw(sb);
 	}
 }

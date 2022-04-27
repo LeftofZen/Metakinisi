@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Endeavour.UI
 {
-	public interface Image
+	public interface IImage
 	{
 		void Draw(SpriteBatch sb, Rectangle bounds);
 	}
 
-	public struct TilesetImage : Image
+	public struct TilesetImage : IImage
 	{
 		public TilesetImage(TilesetReference? tilesetReference) => this.tilesetReference = tilesetReference;
 
@@ -19,7 +19,9 @@ namespace Endeavour.UI
 		public void Draw(SpriteBatch sb, Rectangle bounds)
 		{
 			if (tilesetReference is null)
+			{
 				return;
+			}
 
 			var centre = new Vector2(tilesetReference.Value.SourceRectangle.Width / 2f, tilesetReference.Value.SourceRectangle.Height / 2f);
 			var renderRect = bounds;

@@ -39,10 +39,7 @@ namespace Endeavour.UI
 			}
 		}
 
-		public override void Update(GameTime gameTime)
-		{
-			base.Update(gameTime);
-		}
+		public override void Update(GameTime gameTime) => base.Update(gameTime);
 
 		public override void Draw(SpriteBatch sb)
 		{

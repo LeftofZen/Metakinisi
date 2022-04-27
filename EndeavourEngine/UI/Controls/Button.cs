@@ -6,14 +6,13 @@ namespace Endeavour.UI
 {
 	public class Button : Control
 	{
-		Color DefaultBackColor = Color.Gray;
-		Color DefaultForeColor = Color.Gainsboro;
-		Color HoverBackColor = Color.Gainsboro;
-		Color HoverForeColor = Color.Gray;
-		Color PressedBackColor = Color.White;
-		Color PressedForeColor = Color.Black;
-
-		Label lblText;
+		private Color DefaultBackColor = Color.Gray;
+		private Color DefaultForeColor = Color.Gainsboro;
+		private Color HoverBackColor = Color.Gainsboro;
+		private Color HoverForeColor = Color.Gray;
+		private Color PressedBackColor = Color.White;
+		private Color PressedForeColor = Color.Black;
+		private Label lblText;
 
 		public string Text
 		{

@@ -9,10 +9,7 @@ namespace Endeavour.UI
 		public string Text;
 		public SpriteFont Font;
 
-		public Label(Rectangle bounds) : base(bounds)
-		{
-			DrawBackground = false;
-		}
+		public Label(Rectangle bounds) : base(bounds) => DrawBackground = false;
 
 		public override void Draw(SpriteBatch sb)
 		{

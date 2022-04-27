@@ -9,7 +9,7 @@ namespace Endeavour.UI
 		public string Title { get; set; }
 
 		protected Panel titleBar;
-		int titleBarThickness = 24;
+		private int titleBarThickness = 24;
 
 		public Window(Rectangle bounds, string title) : base(bounds)
 		{

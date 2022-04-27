@@ -25,15 +25,19 @@ namespace Endeavour.Services
 
 		#region Services
 
-		static readonly Dictionary<Type, object> _services = new();
+		private static readonly Dictionary<Type, object> _services = new();
 
 		public static void AddService<T>(T service)
 		{
 			if (service is null)
+			{
 				throw new ArgumentException("cannot add null service");
+			}
 
 			if (_services.ContainsKey(typeof(T)))
+			{
 				throw new ArgumentException("service already exists");
+			}
 
 			_services.Add(typeof(T), service);
 		}

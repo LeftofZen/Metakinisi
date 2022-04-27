@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using Microsoft.Xna.Framework;
 
 namespace Endeavour
 {
@@ -38,35 +38,17 @@ namespace Endeavour
 			Z = value;
 		}
 
-		public static Point3 operator +(Point3 value1, Point3 value2)
-		{
-			return new Point3(value1.X + value2.X, value1.Y + value2.Y, value1.Z + value2.Z);
-		}
+		public static Point3 operator +(Point3 value1, Point3 value2) => new Point3(value1.X + value2.X, value1.Y + value2.Y, value1.Z + value2.Z);
 
-		public static Point3 operator -(Point3 value1, Point3 value2)
-		{
-			return new Point3(value1.X - value2.X, value1.Y - value2.Y, value1.Z - value2.Z);
-		}
+		public static Point3 operator -(Point3 value1, Point3 value2) => new Point3(value1.X - value2.X, value1.Y - value2.Y, value1.Z - value2.Z);
 
-		public static Point3 operator *(Point3 value1, Point3 value2)
-		{
-			return new Point3(value1.X * value2.X, value1.Y * value2.Y, value1.Z * value2.Z);
-		}
+		public static Point3 operator *(Point3 value1, Point3 value2) => new Point3(value1.X * value2.X, value1.Y * value2.Y, value1.Z * value2.Z);
 
-		public static Point3 operator /(Point3 source, Point3 divisor)
-		{
-			return new Point3(source.X / divisor.X, source.Y / divisor.Y, source.Z / divisor.Z);
-		}
+		public static Point3 operator /(Point3 source, Point3 divisor) => new Point3(source.X / divisor.X, source.Y / divisor.Y, source.Z / divisor.Z);
 
-		public static bool operator ==(Point3 a, Point3 b)
-		{
-			return a.Equals(b);
-		}
+		public static bool operator ==(Point3 a, Point3 b) => a.Equals(b);
 
-		public static bool operator !=(Point3 a, Point3 b)
-		{
-			return !a.Equals(b);
-		}
+		public static bool operator !=(Point3 a, Point3 b) => !a.Equals(b);
 
 		public override bool Equals(object obj)
 		{
@@ -78,26 +60,14 @@ namespace Endeavour
 			return false;
 		}
 
-		public bool Equals(Point3 other)
-		{
-			return X == other.X && Y == other.Y && Z == other.Z;
-		}
+		public bool Equals(Point3 other) => X == other.X && Y == other.Y && Z == other.Z;
 
-		public override int GetHashCode()
-		{
-			return HashCode.Combine(X, Y, Z);
-		}
+		public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
-		public override string ToString()
-		{
-			return $"{{X:{X} Y:{Y} Z:{Z}}}";
-		}
+		public override string ToString() => $"{{X:{X} Y:{Y} Z:{Z}}}";
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Vector3 ToVector3()
-		{
-			return new Vector3(X, Y, Z);
-		}
+		public Vector3 ToVector3() => new Vector3(X, Y, Z);
 
 		public void Deconstruct(out int x, out int y, out int z)
 		{
