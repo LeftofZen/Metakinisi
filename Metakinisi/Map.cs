@@ -18,7 +18,7 @@ namespace Metakinisi
 					Tiles[y, x] = new List<ITileElement>();
 
 					// add a base layer
-					var surfaceElement = new SurfaceElement(new Point3(x, y, z), SurfaceElementType.Grass);
+					var surfaceElement = new SurfaceElement(new Endeavour.Point3(x, y, z), SurfaceElementType.Grass);
 					AddElement(surfaceElement);
 				}
 			}

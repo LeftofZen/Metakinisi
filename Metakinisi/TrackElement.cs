@@ -11,16 +11,16 @@ namespace Metakinisi
 	{
 		public int ZIndex => 1;
 
-		public static TrackElement None = new TrackElement(new Point3(-1, -1, -1), TrackType.None);
+		public static TrackElement None = new TrackElement(new Endeavour.Point3(-1, -1, -1), TrackType.None);
 
 		public TrackType type = TrackType.None;
 		public Rotation rotation;
-		Point3 cellCoordinates;
+		Endeavour.Point3 cellCoordinates;
 
-		public Point3 Coordinates { get => cellCoordinates; }
+		public Endeavour.Point3 Coordinates { get => cellCoordinates; }
 		public Point worldCoordinates => new Point(cellCoordinates.X * 32, cellCoordinates.Y * 32);
 
-		public TrackElement(Point3 cellCoordinates, TrackType type, Rotation rotation = Rotation.Zero)
+		public TrackElement(Endeavour.Point3 cellCoordinates, TrackType type, Rotation rotation = Rotation.Zero)
 		{
 			this.cellCoordinates = cellCoordinates;
 			this.type = type;

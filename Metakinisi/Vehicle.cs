@@ -1,7 +1,9 @@
-﻿using Graph;
+﻿using Endeavour;
+using Graph;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+//using MonoGame.Extended;
 
 namespace Metakinisi
 {
@@ -15,7 +17,7 @@ namespace Metakinisi
 		}
 
 		// define world location
-		Point3 Cell;
+		Endeavour.Point3 Cell;
 		public float PercentThroughTile = 0f;
 
 		public string Name { get; set; }
@@ -33,13 +35,13 @@ namespace Metakinisi
 		float edgePosition;
 		//Vector2 position;
 
-		public Vehicle(Point3 cell, float percent, string name)
+		public Vehicle(Endeavour.Point3 cell, float percent, string name)
 		{
 			PlaceInCell(cell, percent);
 			Name = name;
 		}
 
-		public void PlaceInCell(Point3 cell, float percent)
+		public void PlaceInCell(Endeavour.Point3 cell, float percent)
 		{
 			Cell = cell;
 			PercentThroughTile = percent;
@@ -100,7 +102,7 @@ namespace Metakinisi
 
 		List<TrackElement>[,] TrackWorld;
 
-		static TrackElement GetCurrentTrackElement(Point3 coords, List<TrackElement>[,] trackWorld)
+		static TrackElement GetCurrentTrackElement(Endeavour.Point3 coords, List<TrackElement>[,] trackWorld)
 			=> coords.Y >= 0 && coords.X >= 0 && coords.Y < trackWorld.GetLength(0) && coords.X < trackWorld.GetLength(1)
 		? trackWorld[coords.Y, coords.X].First()
 		: TrackElement.None;

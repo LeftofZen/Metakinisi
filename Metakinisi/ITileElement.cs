@@ -1,4 +1,6 @@
-﻿namespace Metakinisi
+﻿using Endeavour;
+
+namespace Metakinisi
 {
 	public interface ITileElement : Endeavour.Interfaces.IDrawable
 	{

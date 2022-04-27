@@ -1,14 +1,14 @@
 ﻿namespace Endeavour.Logging
 {
-	public class ConsoleLogSink : ILogSink
+	public struct ConsoleLogSink : ILogSink
 	{
 		public void Log(string logline)
 			=> Console.WriteLine(logline);
 	}
 
-	public class FileLogSink : ILogSink
+	public struct FileLogSink : ILogSink
 	{
-		string filename;
+		readonly string filename;
 
 		public FileLogSink(string filename)
 			=> this.filename = filename;
@@ -17,7 +17,7 @@
 			=> File.WriteAllText(filename, logline);
 	}
 
-	public class InGameLogSink : ILogSink
+	public struct InGameLogSink : ILogSink
 	{
 		public void Log(string logline) => throw new NotImplementedException();
 	}

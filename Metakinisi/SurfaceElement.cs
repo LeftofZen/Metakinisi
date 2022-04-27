@@ -15,7 +15,7 @@ namespace Metakinisi
 	{
 		public int ZIndex => 0;
 
-		public SurfaceElement(Point3 coordinates, SurfaceElementType surfaceType)
+		public SurfaceElement(Endeavour.Point3 coordinates, SurfaceElementType surfaceType)
 		{
 			Coordinates = coordinates;
 			SurfaceType = surfaceType;
@@ -28,7 +28,7 @@ namespace Metakinisi
 			{ SurfaceElementType.Water, Color.CadetBlue },
 		};
 
-		public Point3 Coordinates { get; set; }
+		public Endeavour.Point3 Coordinates { get; set; }
 
 		public SurfaceElementType SurfaceType { get; set; }
 

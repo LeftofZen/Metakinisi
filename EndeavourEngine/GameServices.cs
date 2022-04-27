@@ -1,4 +1,5 @@
 ﻿using Endeavour.Input;
+using Endeavour.Logging;
 using Endeavour.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ namespace Endeavour.Services
 		public static readonly Dictionary<string, Texture2D> Textures = new();
 		public static readonly InputManager InputManager = new();
 		public static readonly Random Random = new(1);
-		//public static readonly GameLogger Logger = new();
+		public static readonly Logger Logger = new();
 		//public static readonly Dictionary<string, IGameEntity> EntityDefinitions = new();
 
 		public static Game Game;

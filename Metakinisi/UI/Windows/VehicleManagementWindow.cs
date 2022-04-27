@@ -1,4 +1,5 @@
-﻿using Endeavour.Services;
+﻿using Endeavour;
+using Endeavour.Services;
 using Endeavour.UI;
 using Microsoft.Xna.Framework;
 

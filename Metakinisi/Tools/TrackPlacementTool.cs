@@ -105,7 +105,7 @@ namespace Metakinisi.Tools
 					railGraph.AddEdge(ghostEdge.Value);
 
 					var surfaceElement = map.GetSurfaceElement(cell.X, cell.Y);
-					var trackElement = new TrackElement(new Point3(cell.X, cell.Y, surfaceElement.Coordinates.Z), cursorType, cursorRotation);
+					var trackElement = new TrackElement(new Endeavour.Point3(cell.X, cell.Y, surfaceElement.Coordinates.Z), cursorType, cursorRotation);
 					map.AddElement(trackElement);
 				}
 			}
