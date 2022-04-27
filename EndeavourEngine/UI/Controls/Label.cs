@@ -1,8 +1,8 @@
-﻿using Metakinisi.Rendering;
+﻿using Endeavour.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
 	public class Label : Control
 	{
@@ -20,8 +20,7 @@ namespace Metakinisi.UI
 
 			if (!string.IsNullOrEmpty(Text))
 			{
-				//sb.DrawString(Font, Text, AbsoluteLocation.ToVector2(), ForeColor);
-				sb.DrawString(Font, Text, AbsoluteBounds, Alignment.Center, ForeColor);
+				sb.DrawString(Font, Text, AbsoluteBounds, TextAlignment.Center, ForeColor);
 			}
 		}
 	}

@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Metakinisi.Input;
 using Metakinisi.Tools;
+using Endeavour.Services;
+using Endeavour.Input;
 
 namespace Metakinisi
 {
@@ -12,9 +13,6 @@ namespace Metakinisi
 		public RenderTarget2D RenderTarget { get; set; }
 
 		#region IGridWorld
-
-		//public Map Map => gameState.Map;
-		//public Graph2D RailGraph => gameState.RailGraph;
 
 		GameState gameState;
 
@@ -35,8 +33,8 @@ namespace Metakinisi
 			Width = width;
 			Height = height;
 
-			gameState = new GameState();
-			gameState.Map = new Map(Width, Height);
+			var map = new Map(Width, Height);
+			gameState = new GameState(map);
 
 			//train = new Vehicle(new Point(4, 4), 0.5f);
 		}
@@ -98,7 +96,11 @@ namespace Metakinisi
 
 		void DrawReal(SpriteBatch sb)
 		{
-			gameState.Map.Draw(sb);
+			if (gameState.Map is not null)
+			{
+				gameState.Map.Draw(sb);
+				return;
+			}
 
 			//train.Draw(sb);
 
@@ -112,7 +114,10 @@ namespace Metakinisi
 			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(11, 71), Color.Black);
 			sb.DrawString(GameServices.Fonts["Calibri"], "Clear Graph" + " (D)", new Vector2(10, 70), Color.White);
 
-			gameState.RailGraph.Draw(sb);
+			if (gameState.RailGraph is not null)
+			{
+				gameState.RailGraph.Draw(sb);
+			}
 		}
 	}
 }

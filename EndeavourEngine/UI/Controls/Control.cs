@@ -1,23 +1,67 @@
-﻿using Metakinisi.Input;
+﻿using Endeavour.Input;
+using Endeavour.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
-	public abstract class Control : IDrawable, IUpdateable
+	public enum DockStyle
+	{
+		None,
+		Fill,
+	}
+
+	public struct Margin
+	{
+		public int Left;
+		public int Right;
+		public int Top;
+		public int Bottom;
+
+		public Margin() : this(0, 0, 0, 0)
+		{ }
+
+		public Margin(int all) : this(all, all, all, all)
+		{ }
+
+		public Margin(int left, int right, int top, int bottom)
+		{
+			Left = left;
+			Right = right;
+			Top = top;
+			Bottom = bottom;
+		}
+	}
+
+	public abstract class Control : Interfaces.IDrawable, Interfaces.IUpdateable
 	{
 		public Control(Rectangle bounds)
 		{
 			RelativeBounds = bounds;
 		}
 
-		public Action OnMouseDown;
-		public Action OnMouseUp;
-		public Action OnClick;
-		public Action OnDrag;
-		public Action OnDragBegin;
-		public Action OnDragEnd;
+		public event EventHandler MouseDownEH;
+		public event EventHandler MouseUpEH;
+		public event EventHandler MouseClickEH;
+		public event EventHandler DragEH;
+		public event EventHandler DragBeginEH;
+		public event EventHandler DragEndEH;
+
+		public void OnMouseDown() => MouseDownEH?.Invoke(this, new EventArgs());
+		public void OnMouseUp() => MouseUpEH?.Invoke(this, new EventArgs());
+		public void OnMouseClick() => MouseClickEH?.Invoke(this, new EventArgs());
+		public void OnDrag() => DragEH?.Invoke(this, new EventArgs());
+		public void OnDragBegin()
+		{
+			DragBeginPoint = GameServices.InputManager.CurrentMouse.Position;
+			DragBeginEH?.Invoke(this, new EventArgs());
+		}
+		public void OnDragEnd()
+		{
+			DragEndEH?.Invoke(this, new EventArgs());
+			DragBeginPoint = Point.Zero;
+		}
 
 		public bool ShouldDisposeOnClose = false;
 		public bool ShouldDispose = false;
@@ -36,7 +80,23 @@ namespace Metakinisi.UI
 		public Color ForeColor { get; set; } = Color.DarkMagenta;
 		public Color BackColor { get; set; } = Color.Magenta;
 
-		public TilesetReference? BackgroundImage { get; set; } = null;
+		public Window ParentWindow => GetParentWindow(this);
+
+		public static Window GetParentWindow(Control current)
+		{
+			var parent = current.Parent;
+
+			if (parent is null)
+				return null;
+
+			if (parent is Window window)
+			{
+				return window;
+			}
+			return GetParentWindow(parent);
+		}
+
+		public Image BackgroundImage { get; set; } = null;
 
 		public Rectangle RelativeBounds;
 		public Rectangle AbsoluteBounds
@@ -47,12 +107,29 @@ namespace Metakinisi.UI
 		public int Width => AbsoluteBounds.Width;
 		public int Height => AbsoluteBounds.Height;
 
+		public Margin Margin = new(3);
+
 		private List<Control> controls = new();
 		public IReadOnlyCollection<Control> Controls => controls.AsReadOnly();
 
 		public Control? Parent;
 
-		public int ZIndex = 0;
+		public int ZIndex
+		{
+			get => zIndex;
+			set
+			{
+				if (!LockZIndex)
+				{
+					zIndex = value;
+				}
+			}
+		}
+		int zIndex = 0;
+
+		public bool LockZIndex { get; set; } = false;
+
+		public DockStyle DockStyle { get; set; } = DockStyle.None;
 
 		public bool ContainsMouse
 			=> AbsoluteBounds.Contains(GameServices.InputManager.CurrentMouse.Position);
@@ -104,20 +181,7 @@ namespace Metakinisi.UI
 				}
 				else
 				{
-					var centre = new Vector2(BackgroundImage.Value.SourceRectangle.Width / 2f, BackgroundImage.Value.SourceRectangle.Height / 2f);
-					var renderRect = AbsoluteBounds;
-					renderRect.Offset(AbsoluteBounds.Width / 2f, AbsoluteBounds.Height / 2f);
-
-					// image
-					sb.Draw(
-						GameServices.Textures[BackgroundImage.Value.TilesetName],
-						renderRect,
-						BackgroundImage.Value.SourceRectangle,
-						Color.White,
-						RotationHelpers.RotationAnglesForDrawing[BackgroundImage.Value.Rotation],
-						centre,
-						SpriteEffects.None,
-						0f);
+					BackgroundImage.Draw(sb, AbsoluteBounds);
 
 					// debug
 					//sb.Draw(
@@ -132,9 +196,13 @@ namespace Metakinisi.UI
 					//sb.DrawRectangle(BackgroundImage.Value.SourceRectangle, Color.Aqua, 3);
 					//sb.DrawPoint(BackgroundImage.Value.SourceRectangle.Center.ToVector2(), Color.Yellow, 5);
 				}
+
 			}
 
-			sb.DrawRectangle(AbsoluteBounds, BorderStyle.Color, BorderStyle.Thickness);
+			if (BorderStyle.Thickness > 0)
+			{
+				sb.DrawRectangle(AbsoluteBounds, BorderStyle.Color, BorderStyle.Thickness);
+			}
 
 			foreach (var c in controls.Where(c => c.Visible).OrderBy(c => c.ZIndex))
 			{
@@ -157,24 +225,7 @@ namespace Metakinisi.UI
 			}
 		}
 
-		void DragBegin()
-		{
-			DragBeginPoint = GameServices.InputManager.CurrentMouse.Position;
-			OnDragEnd?.Invoke();
-		}
-
-		void DragEnd()
-		{
-			DragBeginPoint = Point.Zero;
-			OnDragEnd?.Invoke();
-		}
-
-		void Drag()
-		{
-			OnDrag?.Invoke();
-		}
-
-		public void HandleInput()
+		public virtual void HandleInput()
 		{
 			IsHovering = ContainsMouse;
 			IsPressed = ContainsMouse && GameServices.InputManager.IsMouseButtonPressed(MouseButtons.LeftButton);
@@ -183,34 +234,41 @@ namespace Metakinisi.UI
 
 			if (IsHovering && input.IsNewMousePress(MouseButtons.LeftButton))
 			{
-				OnMouseDown?.Invoke();
+				OnMouseDown();
 			}
 
 			if (IsHovering && input.IsNewMouseRelease(MouseButtons.LeftButton))
 			{
-				OnMouseUp?.Invoke();
-				OnClick?.Invoke();
+				OnMouseUp();
+				OnMouseClick();
 			}
 
 			if (IsHovering && input.IsNewMousePress(MouseButtons.LeftButton))
 			{
-				DragBegin();
+				OnDragBegin();
 			}
 
 			if (input.IsMouseButtonPressed(MouseButtons.LeftButton) && DragBeginPoint != Point.Zero)
 			{
-				Drag();
+				OnDrag();
 			}
 
 			if (input.IsNewMouseRelease(MouseButtons.LeftButton))
 			{
-				DragEnd();
+				OnDragEnd();
 			}
 		}
 
 		public virtual void Update(GameTime gameTime)
 		{
-			foreach (Control c in Controls.Where(c => c.Enabled))
+			if (DockStyle == DockStyle.Fill && Parent is not null)
+			{
+				var newWidth = Parent.Width - Parent.Margin.Left - Parent.Margin.Right;
+				var newHeight = Parent.Height - Parent.Margin.Top - Parent.Margin.Bottom;
+				RelativeBounds = new Rectangle(Parent.Margin.Left, Parent.Margin.Top, newWidth, newHeight);
+			}
+
+			foreach (var c in Controls.Where(c => c.Enabled))
 			{
 				c.Update(gameTime);
 			}

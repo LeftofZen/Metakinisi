@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
 	public class Window : Control
 	{
@@ -21,6 +22,8 @@ namespace Metakinisi.UI
 				Name = "TitleBar",
 			};
 
+			titleBar.MouseDownEH += (obj, sender) => GameServices.UIManager.SetFocusedWindow(this);
+
 			// rough approx. of 10 pixels per char, can use MeasureString later
 			var lbl = new Label(new Rectangle(0, 0, Title.Length * 10, titleBarThickness))
 			{
@@ -28,7 +31,7 @@ namespace Metakinisi.UI
 				Font = GameServices.Fonts["Calibri"],
 				ForeColor = Color.Blue,
 				BackColor = Color.Yellow,
-				Name = "CloseButton",
+				Name = "CloseLabel",
 			};
 			titleBar.AddControl(lbl);
 
@@ -36,9 +39,11 @@ namespace Metakinisi.UI
 			{
 				BorderStyle = new BorderStyle { Color = Color.DarkGray, Thickness = 2 },
 				BackColor = Color.Gray,
+				Name = "CloseButton",
 			};
+
 			titleBar.AddControl(closeBtn);
-			titleBar.OnDrag = DragControl;
+			titleBar.DragEH += (obj, sender) => DragControl();
 
 			AddControl(titleBar);
 		}
@@ -62,7 +67,10 @@ namespace Metakinisi.UI
 		{
 			base.Draw(sb);
 
-			sb.DrawString(GameServices.Fonts["Calibri"], ZIndex.ToString(), AbsoluteLocation.ToVector2(), Color.Black);
+			if (UIManager.DebugRenderingEnabled)
+			{
+				sb.DrawString(GameServices.Fonts["Calibri"], ZIndex.ToString(), AbsoluteLocation.ToVector2(), Color.Black);
+			}
 			//debug
 			//  var counter = 0f;
 			//foreach (var c in Controls)

@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
-	public class UIManager : IDrawable, IUpdateable
+	public class UIManager : Interfaces.IDrawable, Interfaces.IUpdateable
 	{
 		public List<Window> Windows = new(); // ordered by zorder
 		public Control? FocusedWindow;
@@ -42,6 +43,8 @@ namespace Metakinisi.UI
 		//	}
 		//}
 
+		public static bool DebugRenderingEnabled = true;
+
 		public void Draw(SpriteBatch sb)
 		{
 			foreach (var window in Windows.Where(w => w.Visible).OrderBy(w => w.ZIndex))
@@ -73,24 +76,23 @@ namespace Metakinisi.UI
 
 		public void Update(GameTime gameTime)
 		{
-			foreach (var w in Windows)
+			foreach (var w in Windows.OrderByDescending(c => c.ZIndex))
 			{
+				w.HandleInput(gameTime);
 				w.Update(gameTime);
 			}
 
-			if (FocusedWindow == null)
-			{
-				SetFocusedWindow();
-			}
+			//if (FocusedWindow == null)
+			//{
+			//	SetFocusedWindow();
+			//}
 
-			// FocusedControl can still be null if you drag off the edge
-			// of the entire game window 
-			if (FocusedWindow != null && !FocusedWindow.IsDragging)
-			{
-				SetFocusedWindow();
-			}
-
-			FocusedWindow?.HandleInput(gameTime);
+			//// FocusedControl can still be null if you drag off the edge
+			//// of the entire game window 
+			//if (FocusedWindow != null && !FocusedWindow.IsDragging)
+			//{
+			//	SetFocusedWindow();
+			//}
 		}
 
 		public void SetFocusedWindow(Window w = null)
@@ -117,7 +119,10 @@ namespace Metakinisi.UI
 			}
 			else
 			{
-				FocusedWindow.ZIndex = 10;
+				if (FocusedWindow is not null)
+				{
+					FocusedWindow.ZIndex = 10;
+				}
 				FocusedWindow = w;
 				FocusedWindow.ZIndex = 20;
 				//var oldWindow = FocusedWindow;

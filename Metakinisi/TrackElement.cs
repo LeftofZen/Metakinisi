@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Endeavour.Tileset;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Shapes;
@@ -159,7 +161,7 @@ namespace Metakinisi
 			if (type == TrackType.None)
 				return;
 
-			const int cellSize = GameServices.GridSize;
+			const int cellSize = Constants.GridSize;
 			var x = Coordinates.X;
 			var y = Coordinates.Y;
 

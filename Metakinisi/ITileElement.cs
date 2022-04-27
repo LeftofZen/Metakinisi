@@ -1,6 +1,6 @@
 ﻿namespace Metakinisi
 {
-	public interface ITileElement : IDrawable
+	public interface ITileElement : Endeavour.Interfaces.IDrawable
 	{
 		public Point3 Coordinates { get; }
 

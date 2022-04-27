@@ -18,9 +18,11 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="Rendering\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EndeavourEngine\EndeavourEngine.csproj" />
     <ProjectReference Include="..\Graph\Graph.csproj" />
   </ItemGroup>
 

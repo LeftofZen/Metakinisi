@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace Metakinisi
 {
-	public class Map : IDrawable
+	public class Map : Endeavour.Interfaces.IDrawable
 	{
 		public Map(int width, int height)
 		{

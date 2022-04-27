@@ -1,6 +1,8 @@
 ﻿using Metakinisi.Tools;
+using Endeavour.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Endeavour.Tileset;
 
 namespace Metakinisi.UI
 {
@@ -18,7 +20,7 @@ namespace Metakinisi.UI
 			{
 				BorderStyle = new BorderStyle { Color = Color.DarkGray, Thickness = 2 },
 				BackColor = Color.Gray,
-				BackgroundImage = new TilesetReference { TilesetName = "tileset", SourceRectangle = TilesetHelper.RectangleFromTilesetId(TilesetIds.Straight, 16, 16, 32) },
+				BackgroundImage = new TilesetImage(new TilesetReference { TilesetName = "tileset", SourceRectangle = TilesetHelper.RectangleFromTilesetId(TilesetIds.Straight, 16, 16, 32) }),
 				DrawText = false,
 			};
 			AddControl(straightTrack);
@@ -29,7 +31,7 @@ namespace Metakinisi.UI
 			{
 				BorderStyle = new BorderStyle { Color = Color.DarkGray, Thickness = 2 },
 				BackColor = Color.Gray,
-				BackgroundImage = new TilesetReference { TilesetName = "tileset", SourceRectangle = TilesetHelper.RectangleFromTilesetId(TilesetIds.Corner, 16, 16, 32), },
+				BackgroundImage = new TilesetImage(new TilesetReference { TilesetName = "tileset", SourceRectangle = TilesetHelper.RectangleFromTilesetId(TilesetIds.Corner, 16, 16, 32), }),
 				DrawText = false,
 			};
 			AddControl(cornerTrack);
@@ -42,7 +44,7 @@ namespace Metakinisi.UI
 			{
 				BorderStyle = new BorderStyle { Color = Color.DarkGray, Thickness = 2 },
 				BackColor = Color.Gray,
-				BackgroundImage = new TilesetReference { TilesetName = "ui", SourceRectangle = TilesetHelper.RectangleFromTilesetXY(0, 3, 24) },
+				BackgroundImage = new TilesetImage(new TilesetReference { TilesetName = "ui", SourceRectangle = TilesetHelper.RectangleFromTilesetXY(0, 3, 24) }),
 				DrawText = false,
 			};
 			AddControl(rotateLeft);
@@ -56,7 +58,7 @@ namespace Metakinisi.UI
 			{
 				BorderStyle = new BorderStyle { Color = Color.DarkGray, Thickness = 2 },
 				BackColor = Color.Gray,
-				BackgroundImage = new TilesetReference { TilesetName = "ui", SourceRectangle = TilesetHelper.RectangleFromTilesetXY(0, 10, 24) },
+				BackgroundImage = new TilesetImage(new TilesetReference { TilesetName = "ui", SourceRectangle = TilesetHelper.RectangleFromTilesetXY(0, 10, 24) }),
 				DrawText = false,
 			};
 			AddControl(rotateRight);
@@ -77,23 +79,23 @@ namespace Metakinisi.UI
 			{
 				ctrlS.BorderStyle.Color = Color.Red;
 				ctrlC.BorderStyle.Color = Color.DarkGray;
-				currentTrackImage.BackgroundImage = new TilesetReference
+				currentTrackImage.BackgroundImage = new TilesetImage(new TilesetReference
 				{
-					SourceRectangle = ctrlS.BackgroundImage.Value.SourceRectangle,
-					TilesetName = ctrlS.BackgroundImage.Value.TilesetName,
+					SourceRectangle = ((TilesetImage)ctrlS.BackgroundImage).tilesetReference.Value.SourceRectangle,
+					TilesetName = ((TilesetImage)ctrlS.BackgroundImage).tilesetReference.Value.TilesetName,
 					Rotation = tool.cursorRotation,
-				};
+				});
 			}
 			else if (tool.cursorType == TrackType.Curve)
 			{
 				ctrlS.BorderStyle.Color = Color.DarkGray;
 				ctrlC.BorderStyle.Color = Color.Red;
-				currentTrackImage.BackgroundImage = new TilesetReference
+				currentTrackImage.BackgroundImage = new TilesetImage(new TilesetReference
 				{
-					SourceRectangle = ctrlC.BackgroundImage.Value.SourceRectangle,
-					TilesetName = ctrlC.BackgroundImage.Value.TilesetName,
+					SourceRectangle = ((TilesetImage)ctrlC.BackgroundImage).tilesetReference.Value.SourceRectangle,
+					TilesetName = ((TilesetImage)ctrlC.BackgroundImage).tilesetReference.Value.TilesetName,
 					Rotation = tool.cursorRotation,
-				};
+				});
 			}
 		}
 

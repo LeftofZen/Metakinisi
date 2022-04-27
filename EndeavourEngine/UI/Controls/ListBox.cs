@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace Metakinisi.UI.Controls
+namespace Endeavour.UI
 {
 	public class ListBox<T> : Control where T : class
 	{
@@ -14,7 +15,7 @@ namespace Metakinisi.UI.Controls
 
 		public int SelectedElementIndex { get; set; } = -1;
 
-		public T SelectedElement { get => SelectedElementIndex == -1 ? null : Items[SelectedElementIndex]; }
+		public T SelectedElement => SelectedElementIndex == -1 ? null : Items[SelectedElementIndex];
 
 		public int HighlightedElementIndex { get; set; } = -1;
 
@@ -22,9 +23,9 @@ namespace Metakinisi.UI.Controls
 		{
 		}
 
-		public override void Update(GameTime gameTime)
+		public override void HandleInput()
 		{
-			base.Update(gameTime);
+			base.HandleInput();
 
 			if (ContainsMouse)
 			{
@@ -38,13 +39,18 @@ namespace Metakinisi.UI.Controls
 			}
 		}
 
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+		}
+
 		public override void Draw(SpriteBatch sb)
 		{
 			base.Draw(sb);
 			var offset = 0;
 
 			var itemsToRender = AbsoluteBounds.Height / ListItemHeight;
-			for (int i = 0; i < itemsToRender; i++)
+			for (var i = 0; i < itemsToRender; i++)
 			{
 				var backColor = i == SelectedElementIndex ? Color.Yellow : BackColor;
 				sb.FillRectangle(new RectangleF(AbsoluteBounds.X, AbsoluteBounds.Y + offset, AbsoluteBounds.Width - 5, ListItemHeight), backColor);

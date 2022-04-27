@@ -1,4 +1,4 @@
-﻿namespace Metakinisi.Input
+﻿namespace Endeavour.Input
 {
 	public enum MouseButtons
 	{

@@ -4,7 +4,7 @@ using Metakinisi.Tools;
 
 namespace Metakinisi
 {
-	public interface IGridWorld : IUpdateable, IDrawable
+	public interface IGridWorld : Endeavour.Interfaces.IUpdateable, Endeavour.Interfaces.IDrawable
 	{
 		GameState GameState { get; }
 

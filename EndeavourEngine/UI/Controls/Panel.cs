@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
 	public class Panel : Control
 	{

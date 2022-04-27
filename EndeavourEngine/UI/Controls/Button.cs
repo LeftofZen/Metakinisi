@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Endeavour.Services;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Metakinisi.UI
+namespace Endeavour.UI
 {
 	public class Button : Control
 	{
@@ -31,7 +32,7 @@ namespace Metakinisi.UI
 
 		public Button(Rectangle bounds, string text, Action action) : base(bounds)
 		{
-			OnClick = action;
+			MouseClickEH += (obj, sender) => action();
 			//IsToggle = toggle;
 
 			var lblBounds = new Rectangle(0, 0, bounds.Width, bounds.Height);

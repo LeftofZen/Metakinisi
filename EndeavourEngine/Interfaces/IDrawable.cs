@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace Metakinisi
+namespace Endeavour.Interfaces
 {
 	public interface IDrawable
 	{

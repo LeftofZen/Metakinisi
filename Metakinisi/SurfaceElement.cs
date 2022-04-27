@@ -35,7 +35,7 @@ namespace Metakinisi
 		public void Draw(SpriteBatch sb)
 		{
 			sb.FillRectangle(
-				new Rectangle(Coordinates.X * GameServices.GridSize, Coordinates.Y * GameServices.GridSize, GameServices.GridSize, GameServices.GridSize),
+				new Rectangle(Coordinates.X * Constants.GridSize, Coordinates.Y * Constants.GridSize, Constants.GridSize, Constants.GridSize),
 				SurfaceColors[SurfaceType]);
 		}
 	}

@@ -1,18 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Metakinisi.Input
+namespace Endeavour.Input
 {
-	public class InputManager : IUpdateable
+	public class InputManager : Interfaces.IUpdateable
 	{
+		public MouseState CurrentMouse => currentMouseState;
 		private MouseState currentMouseState;
+		private MouseState previousMouseState;
+
+		public MouseState CurrentKeyboard => currentMouseState;
+		private KeyboardState previousKeyboardState;
 		private KeyboardState currentKeyboardState;
 
-		private MouseState previousMouseState;
-		private KeyboardState previousKeyboardState;
-
-		public MouseState CurrentMouse => currentMouseState;
-		public MouseState CurrentKeyboard => currentMouseState;
+		#region IUpdateable
 
 		public void Update(GameTime gameTime)
 		{
@@ -22,6 +23,8 @@ namespace Metakinisi.Input
 			currentMouseState = Mouse.GetState();
 			currentKeyboardState = Keyboard.GetState();
 		}
+
+		#endregion
 
 		public bool IsMouseButtonPressed(MouseButtons mouseButtons)
 			=> mouseButtons switch

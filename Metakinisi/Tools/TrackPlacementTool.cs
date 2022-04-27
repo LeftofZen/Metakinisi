@@ -1,5 +1,7 @@
-﻿using Graph;
-using Metakinisi.Input;
+﻿using Endeavour.Input;
+using Endeavour.Services;
+using Endeavour.Tileset;
+using Graph;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,15 +20,15 @@ namespace Metakinisi.Tools
 		public void Update(GameTime gameTime, Graph2D railGraph)
 		{
 			var input = GameServices.InputManager;
-			var map = GameServices.GridWorld.GameState.Map;
+			var map = GameServices.GetService<GridWorld>().GameState.Map;
 
-			var cell = new Point(input.CurrentMouse.X / GameServices.GridSize, input.CurrentMouse.Y / GameServices.GridSize);
+			var cell = new Point(input.CurrentMouse.X / Constants.GridSize, input.CurrentMouse.Y / Constants.GridSize);
 
 			highlightedEdge = null;
 			// get highlighted rail cell
 			if (cell.Y >= 0 && cell.Y < map.Height && cell.X >= 0 && cell.X < map.Width)
 			{
-				var rect = new RectangleF(cell.X * GameServices.GridSize, cell.Y * GameServices.GridSize, GameServices.GridSize, GameServices.GridSize);
+				var rect = new RectangleF(cell.X * Constants.GridSize, cell.Y * Constants.GridSize, Constants.GridSize, Constants.GridSize);
 				foreach (var e in railGraph.Edges)
 				{
 					if (rect.Contains(e.Barycentre))

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Metakinisi
+namespace Endeavour.Tileset
 {
 	public static class RotationHelpers
 	{

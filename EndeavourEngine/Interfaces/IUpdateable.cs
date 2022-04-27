@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Metakinisi
+namespace Endeavour.Interfaces
 {
 	public interface IUpdateable
 	{
